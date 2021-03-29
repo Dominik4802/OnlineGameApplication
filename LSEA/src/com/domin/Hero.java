@@ -1,22 +1,23 @@
 package com.domin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 // abstract Hero class to store universal data and methods of different heroes
-public abstract class Hero {
+public abstract class Hero implements Cloneable {
 
-    private String name;
-    private final int baseDamage;
-    private final int baseArmour;
-    private final double baseAttackRange;
-    private final double baseAttackSpeed;
-    private ArrayList<Item> inventory; // to be set with a setter
-    private int numOfItems;
-    private int totalDamage;
-    private int totalArmour;
-    private double totalAttackRange;
-    private double totalAttackSpeed;
+    protected String name;
+    protected final int baseDamage;
+    protected final int baseArmour;
+    protected final double baseAttackRange;
+    protected final double baseAttackSpeed;
+    protected ArrayList<Item> inventory; // to be set with a setter
+    protected int numOfItems;
+    protected int totalDamage;
+    protected int totalArmour;
+    protected double totalAttackRange;
+    protected double totalAttackSpeed;
     private Player player;
 
     public Hero(String name, int baseDamage, int baseArmour, double baseAttackRange, double baseAttackSpeed, Player player) {
@@ -93,6 +94,7 @@ public abstract class Hero {
     // adding item to inventory and calculating new damage, armour, attack range and attack speed values
     public void addItemToInventory (Item item) {
         this.inventory.add(item);
+        Collections.sort(inventory);    // sorting Items in inventory from the highest level to the lowest
         this.setNumOfItems(this.inventory.size());
         calculateDamage();
         calculateArmour();
@@ -125,7 +127,8 @@ public abstract class Hero {
             System.out.println("Inventory of " + player.getNickname() + " (" + this.name + ")" +
                     " cosists of " + this.numOfItems + " items:");
             for (int i = 0; i < this.inventory.size(); i++) {
-                System.out.println("\t" + (i + 1) + ". " + this.inventory.get(i).getName());
+                System.out.println("\t" + (i + 1) + ". " + this.inventory.get(i).getName() +
+                        " (" + this.inventory.get(i).getLevel() + " lvl)");
             }
         }
     }
@@ -193,6 +196,7 @@ public abstract class Hero {
     // setting inventory and calculating new damage, armour, attack range and attack speed values
     public void setInventory(ArrayList<Item> inventory) {
         this.inventory = inventory;
+        this.setNumOfItems(this.inventory.size());
         calculateDamage();
         calculateArmour();
         calculateAttackRange();
@@ -218,4 +222,6 @@ public abstract class Hero {
     public void setTotalAttackSpeed(double totalAttackSpeed) {
         this.totalAttackSpeed = totalAttackSpeed;
     }
+
+
 }

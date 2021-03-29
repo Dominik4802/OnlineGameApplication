@@ -1,7 +1,7 @@
 package com.domin;
 
 
-public class Player {
+public class Player implements Cloneable {
 
     private String nickname;
     private String joinDate;
@@ -13,6 +13,22 @@ public class Player {
         this.nickname = nickname;
         this.joinDate = joinDate;
         this.country = country;
+    }
+
+    // overriding clone method inherited from Object class
+    @Override
+    public Object clone() {
+        Player player = null;
+
+        try {
+            player = (Player) super.clone();
+        } catch (CloneNotSupportedException e) {
+            player = new Player(this.nickname, this.joinDate, this.country);
+        }
+
+        player.statistics = (Statistics) this.statistics.clone();
+
+        return player;
     }
 
     public void displayPlayerInfo () {
@@ -34,6 +50,10 @@ public class Player {
 
     public String getCountry() {
         return country;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     public void setHero(Hero hero) {

@@ -1,7 +1,7 @@
 package com.domin;
 
 // class of an item being part of an inventory of a hero, it can give bonus points to damage, armour, or attack range of a hero
-public class Item {
+public class Item implements Comparable<Item>, Cloneable {
 
     private String name;
     private double weight;
@@ -17,6 +17,17 @@ public class Item {
         this.bonusDamage = bonusDamage;
         this.bonusArmour = bonusArmour;
         this.bonusAttackRange = bonusAttackRange;
+    }
+
+    // overriding clone method inherited from Object class
+    @Override
+    public Object clone() {
+        try {
+            return (Item) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Item(this.getName(), this.getWeight(), this.getLevel(), this.getBonusDamage(),
+                    this.getBonusArmour(), this.getBonusAttackRange());
+        }
     }
 
     public String getName() {
@@ -41,5 +52,16 @@ public class Item {
 
     public double getBonusAttackRange() {
         return bonusAttackRange;
+    }
+
+    // comparing Items by their levels, in order to sort them in a descending order
+    @Override
+    public int compareTo(Item o) {
+        if (this.level > o.getLevel()) {
+            return -1;
+        }
+        else {
+            return 1;
+        }
     }
 }

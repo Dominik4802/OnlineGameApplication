@@ -1,5 +1,6 @@
 package com.domin;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Warrior extends Hero {
@@ -9,6 +10,32 @@ public class Warrior extends Hero {
 
     public Warrior(Player player) {
         super("Warrior", 35, 62, 61.4, 80.0, player);
+    }
+
+    // overriding clone method inherited from Object class
+    @Override
+    public Object clone() {
+        Player playerCopy = new Player(this.getPlayer().getNickname(), this.getPlayer().getJoinDate(),
+                this.getPlayer().getCountry());
+        Warrior warrior = null;
+        ArrayList<Item> inventoryCopy = new ArrayList<Item>();
+        try {
+            warrior = (Warrior) super.clone();
+        } catch (CloneNotSupportedException e) {
+            warrior = new Warrior(playerCopy);
+        }
+        warrior.name = this.getName();
+        for (Item item : this.getInventory()) {
+            inventoryCopy.add((Item)item.clone());
+        }
+        warrior.setInventory(inventoryCopy);
+        warrior.setNumOfItems(this.numOfItems);
+        warrior.setTotalDamage(this.totalDamage);
+        warrior.setTotalArmour(this.totalArmour);
+        warrior.setTotalAttackRange(this.totalAttackRange);
+        warrior.setTotalAttackSpeed(this.totalAttackSpeed);
+
+        return warrior;
     }
 
     // method calculating damage for the Warrior hero

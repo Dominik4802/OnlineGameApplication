@@ -1,6 +1,7 @@
 package com.domin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class Test {
@@ -97,5 +98,46 @@ public class Test {
             hero.addItemToInventory(bow);
             hero.displayInventory();
         }
+
+        // creating array list of players in order to create a ranking
+        ArrayList<Player> playersList = new ArrayList<Player>();
+        playersList.add(player1);
+        playersList.add(player2);
+        playersList.add(player3);
+        playersList.add(player4);
+        playersList.add(player5);
+
+        // initializing scoreCompare class used to compare Player class by its Score field in Statistics class field
+        ScoreCompare scoreCompare = new ScoreCompare();
+
+        // sorting players list by score using scoreCompare Comparator
+        Collections.sort(playersList, scoreCompare);
+
+        // initializing variable used to numerate items of the list and set the rankingPosition field in player's statistics
+        int j = 1;
+
+        // displaying list of players with their scores and ranks ordered descending by their score
+        System.out.println("\nPlayers ranking is:");
+        for (Player player : playersList) {
+            System.out.println("\t" + j + ". " + player.getNickname() + ", " + player.getStatistics().getScore() + " points" +
+                     " ( " + player.getStatistics().getRank() + " )");
+            player.getStatistics().setRankingPosition(j);
+            j++;
+        }
+
+        // creating deep copy of player1
+        Player deepCopy = (Player) player1.clone();
+
+        // displaying info about player1 and its deep copy
+        player1.displayPlayerInfo();
+        deepCopy.displayPlayerInfo();
+
+        // changing player1's score field by changing their duelsWon field
+        player1.getStatistics().incrementDuelsWon();
+
+        // displaying info about player1 with changed score and its deep copy with score unchanged
+        player1.displayPlayerInfo();
+        deepCopy.displayPlayerInfo();
+
     }
 }

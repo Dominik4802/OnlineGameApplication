@@ -1,10 +1,32 @@
 package com.domin;
 
-public class Statistics {
+import java.util.ArrayList;
+
+public class Statistics implements Cloneable {
+
+    // enum representing ranks based on the score from MASTER (the highest), through DIAMOND1 (highest od diamonds),
+    // down to BRONZE3 (the lowest)
+    public enum Rank {
+        MASTER,
+        DIAMOND1,
+        DIAMOND2,
+        DIAMOND3,
+        GOLD1,
+        GOLD2,
+        GOLD3,
+        SILVER1,
+        SILVER2,
+        SILVER3,
+        BRONZE1,
+        BRONZE2,
+        BRONZE3
+    }
 
     private int duelsWon;
     private int duelsLost;
     private double score;
+    private int rankingPosition;
+    private Rank rank;
     private Player player;
 
     public Statistics(int duelsWon, int duelsLost, Player player) {
@@ -17,7 +39,20 @@ public class Statistics {
         else {                          // if the player haven't played any duels yet
             this.score = calculateScore(100);
         }
+        this.rank = calculateRank();
         this.player.setStatistics(this);
+    }
+
+    // overriding clone method inherited from Object class
+    @Override
+    public Object clone() {
+        Player playerCopy = new Player(this.getPlayer().getNickname(), this.getPlayer().getJoinDate(),
+                this.getPlayer().getCountry());
+        try {
+            return (Statistics) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Statistics(this.getDuelsWon(), this.getDuelsLost(), playerCopy);
+        }
     }
 
     // total score of a player is a balance of duels won and lost, multiplied by number of duels
@@ -42,6 +77,35 @@ public class Statistics {
                 player.getHero().getTotalAttackRange() + player.getHero().getTotalAttackSpeed());
     }
 
+    // method calculating rank based on player's score using enum
+    public Rank calculateRank () {
+        if (this.score <= 100) return rank.BRONZE3;
+        if (this.score > 100 & this.score <=200) return rank.BRONZE2;
+        if (this.score > 200 & this.score <=300) return rank.BRONZE1;
+        if (this.score > 300 & this.score <=500) return rank.SILVER3;
+        if (this.score > 500 & this.score <=750) return rank.SILVER2;
+        if (this.score > 750 & this.score <=1000) return rank.SILVER1;
+        if (this.score > 1000 & this.score <=1500) return rank.GOLD3;
+        if (this.score > 1500 & this.score <=2000) return rank.GOLD2;
+        if (this.score > 2000 & this.score <=2500) return rank.GOLD1;
+        if (this.score > 2500 & this.score <=3250) return rank.DIAMOND3;
+        if (this.score > 3250 & this.score <=4000) return rank.DIAMOND2;
+        if (this.score > 4000 & this.score <=5000) return rank.DIAMOND1;
+        else return rank.MASTER;
+    }
+
+    public void incrementDuelsWon () {
+        setDuelsWon(this.duelsWon + 1);
+        setScore(calculateScore());
+        System.out.println("Incremented won duels of " + this.getPlayer().getNickname() + " by one.");
+    }
+
+    public void incrementDuelsLost () {
+        setDuelsLost(this.duelsLost + 1);
+        calculateScore();
+        System.out.println("Incremented lost duels of " + this.getPlayer().getNickname() + " by one.");
+    }
+
     // Getters:
     public int getDuelsWon() {
         return duelsWon;
@@ -57,5 +121,29 @@ public class Statistics {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public int getRankingPosition() {
+        return rankingPosition;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public void setRankingPosition(int rankingPosition) {
+        this.rankingPosition = rankingPosition;
+    }
+
+    public void setDuelsWon(int duelsWon) {
+        this.duelsWon = duelsWon;
+    }
+
+    public void setDuelsLost(int duelsLost) {
+        this.duelsLost = duelsLost;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
     }
 }
