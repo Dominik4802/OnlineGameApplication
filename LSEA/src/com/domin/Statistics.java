@@ -19,7 +19,8 @@ public class Statistics implements Cloneable {
         SILVER3,
         BRONZE1,
         BRONZE2,
-        BRONZE3
+        BRONZE3,
+        UNRANKED
     }
 
     private int duelsWon;
@@ -33,7 +34,7 @@ public class Statistics implements Cloneable {
         this.duelsWon = duelsWon;
         this.duelsLost = duelsLost;
         this.player = player;
-        if (duelsWon + duelsLost > 0) { // if the player played at least one duel
+        if (this.duelsWon + this.duelsLost > 0) { // if the player played at least one duel
             this.score = calculateScore();
         }
         else {                          // if the player haven't played any duels yet
@@ -41,6 +42,10 @@ public class Statistics implements Cloneable {
         }
         this.rank = calculateRank();
         this.player.setStatistics(this);
+    }
+
+
+    public Statistics() {
     }
 
     // overriding clone method inherited from Object class
@@ -59,7 +64,7 @@ public class Statistics implements Cloneable {
     // player took part in, points of hero's statistics (total damage, total armour...) are added
     // to the obtained result and at the end there are 100 points added to the player's
     // score for every won duel
-    private double calculateScore () {
+    public double calculateScore () {
 
         return ((this.duelsWon - this.duelsLost) * (this.duelsWon + this.duelsLost) +
                 (player.getHero().getTotalDamage() + player.getHero().getTotalArmour() +
@@ -71,7 +76,7 @@ public class Statistics implements Cloneable {
     // in case the player haven't played any duels yet base 100 points are given to him and
     // only the sum of player's hero statistics in addition is taken into consideration
     // while calculating their total score
-    private double calculateScore (int noDuelsPlayedYet) {
+    public double calculateScore (int noDuelsPlayedYet) {
 
         return noDuelsPlayedYet + (player.getHero().getTotalDamage() + player.getHero().getTotalArmour() +
                 player.getHero().getTotalAttackRange() + player.getHero().getTotalAttackSpeed());
@@ -79,18 +84,19 @@ public class Statistics implements Cloneable {
 
     // method calculating rank based on player's score using enum
     public Rank calculateRank () {
-        if (this.score <= 100) return rank.BRONZE3;
-        if (this.score > 100 & this.score <=200) return rank.BRONZE2;
-        if (this.score > 200 & this.score <=300) return rank.BRONZE1;
-        if (this.score > 300 & this.score <=500) return rank.SILVER3;
-        if (this.score > 500 & this.score <=750) return rank.SILVER2;
-        if (this.score > 750 & this.score <=1000) return rank.SILVER1;
-        if (this.score > 1000 & this.score <=1500) return rank.GOLD3;
-        if (this.score > 1500 & this.score <=2000) return rank.GOLD2;
-        if (this.score > 2000 & this.score <=2500) return rank.GOLD1;
-        if (this.score > 2500 & this.score <=3250) return rank.DIAMOND3;
-        if (this.score > 3250 & this.score <=4000) return rank.DIAMOND2;
-        if (this.score > 4000 & this.score <=5000) return rank.DIAMOND1;
+        if (this.score <= 0) return rank.UNRANKED;
+        if (this.score > 0 & this.score <=500) return rank.BRONZE3;
+        if (this.score > 500 & this.score <=1000) return rank.BRONZE2;
+        if (this.score > 1000 & this.score <=2000) return rank.BRONZE1;
+        if (this.score > 2000 & this.score <=5000) return rank.SILVER3;
+        if (this.score > 5000 & this.score <=10000) return rank.SILVER2;
+        if (this.score > 10000 & this.score <=20000) return rank.SILVER1;
+        if (this.score > 20000 & this.score <=50000) return rank.GOLD3;
+        if (this.score > 50000 & this.score <=100000) return rank.GOLD2;
+        if (this.score > 100000 & this.score <=250000) return rank.GOLD1;
+        if (this.score > 250000 & this.score <=500000) return rank.DIAMOND3;
+        if (this.score > 500000 & this.score <=750000) return rank.DIAMOND2;
+        if (this.score > 750000 & this.score <=1000000) return rank.DIAMOND1;
         else return rank.MASTER;
     }
 
@@ -145,5 +151,15 @@ public class Statistics implements Cloneable {
 
     public void setScore(double score) {
         this.score = score;
+        this.rank = calculateRank();
+    }
+
+    public void setRank(Rank rank) {
+        this.rank = rank;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+        this.player.setStatistics(this);
     }
 }

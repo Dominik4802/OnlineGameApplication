@@ -19,6 +19,9 @@ public class Item implements Comparable<Item>, Cloneable {
         this.bonusAttackRange = bonusAttackRange;
     }
 
+    public Item() {
+    }
+
     // overriding clone method inherited from Object class
     @Override
     public Object clone() {
@@ -63,5 +66,29 @@ public class Item implements Comparable<Item>, Cloneable {
         else {
             return 1;
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setBonusDamage(int bonusDamage) {
+        this.bonusDamage = bonusDamage;
+    }
+
+    public void setBonusArmour(int bonusArmour) {
+        this.bonusArmour = bonusArmour;
+    }
+
+    public void setBonusAttackRange(double bonusAttackRange) {
+        this.bonusAttackRange = bonusAttackRange;
     }
 }

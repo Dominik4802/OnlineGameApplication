@@ -15,6 +15,9 @@ public class Player implements Cloneable {
         this.country = country;
     }
 
+    public Player() {
+    }
+
     // overriding clone method inherited from Object class
     @Override
     public Object clone() {
@@ -62,5 +65,17 @@ public class Player implements Cloneable {
 
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setJoinDate(String joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
