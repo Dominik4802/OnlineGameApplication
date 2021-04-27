@@ -1,7 +1,9 @@
 package com.domin;
 
+import java.io.Serializable;
+
 // class of an item being part of an inventory of a hero, it can give bonus points to damage, armour, or attack range of a hero
-public class Item implements Comparable<Item>, Cloneable {
+public class Item implements Comparable<Item>, Cloneable, Serializable {
 
     private String name;
     private double weight;

@@ -1,6 +1,7 @@
 package com.domin;
 
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -30,7 +31,7 @@ public class OnlineGameApp {
             }
         }
         catch (
-        IOException e) {
+                IOException e) {
             e.printStackTrace();
         }
         System.out.println("Loaded " + playersList.size() + " records into playersList.");
@@ -169,16 +170,150 @@ public class OnlineGameApp {
             j++;
         }
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Do you want to display a ranking of top 1000 Players? (y/n)");
-        String option = scanner.nextLine();  // reading user input
 
-        if ("y".equals(option) || "Y".equals(option)) { // printing ranking if the user's input was Y or y
-            for (int i = 0; i < 1000; i++) {
-                System.out.println(playersList.get(i).getStatistics().getRankingPosition() + ". " + playersList.get(i).getNickname() +
-                        ", " + playersList.get(i).getStatistics().getScore() + " points" +
-                        " ( " + playersList.get(i).getStatistics().getRank() + " )");
+        // ================================== LAB 5 ==================================
+
+        Scanner scanner = new Scanner(System.in);
+
+        // validating user directory path
+        String path = null;
+        boolean properPath = false;
+        while (!properPath) {
+        System.out.println("Please specify the directory where You want to save the file:");
+        path = scanner.nextLine();  // reading user input
+            File f = new File(path);
+            if (f.exists() && f.isDirectory()) {
+                properPath = true;
             }
         }
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try {
+            fos = new FileOutputStream(path + "/ranking");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(playersList);
+            oos.close();
+            System.out.println("Saved sorted ArrayList of Players into the " + path + "/ranking" + " file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // validating user file path
+        properPath = false;
+        while (!properPath) {
+            System.out.println("Please specify the path to the binary file You want to read data from:");
+            path = scanner.nextLine();  // reading user input
+            File f = new File(path);
+            if (f.exists() && !f.isDirectory()) {
+                properPath = true;
+            }
+        }
+        // loading data from the binary file
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+
+        // creating ArrayList which will contain data read from the file
+        ArrayList<Player> playersRankingLoaded = null;
+        try {
+            fis = new FileInputStream(path);
+            ois = new ObjectInputStream(fis);
+            playersRankingLoaded = (ArrayList<Player>) ois.readObject();
+            ois.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Ranking from the time it was saved into the " + path +
+                " file is now stored in a playersRankingLoaded ArrayList");
+        for (int i = 0; i<5; i++){
+            System.out.println(playersRankingLoaded.get(i).getStatistics().getRankingPosition() + ". " + playersList.get(i).getNickname() +
+                        ", " + playersList.get(i).getStatistics().getScore() + " points" +
+                        " ( " + playersList.get(i).getStatistics().getRank() + " )");
+            System.out.println("Displayed top 5 players from the playersRankingLoaded ArrayList");
+        }
+
+        // validating user directory path
+        properPath = false;
+        while (!properPath) {
+            System.out.println("Please specify the directory where You want to save the text file with nicknames of players from the ranking:");
+            path = scanner.nextLine();  // reading user input
+            File f = new File(path);
+            if (f.exists() && f.isDirectory()) {
+                properPath = true;
+            }
+        }
+        try {
+            save(path + "/ranking_nicknames.txt", playersList);
+            System.out.println("Saved nicknames of the players from the ranking to the " + path + "/ranking_nicknames.txt" + " file.");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // validating user file path
+        properPath = false;
+        while (!properPath) {
+            System.out.println("Please specify the file path from which You want to read the data with nicknames of players from the ranking:");
+            path = scanner.nextLine();  // reading user input
+            File f = new File(path);
+            if (f.exists() && !f.isDirectory()) {
+                properPath = true;
+            }
+        }
+
+        // printing out number given by the user of top players from the ranking read from the ranking_nicknames.txt file
+        System.out.println("Specify the number of top players info (out of 50000) You want to display from the " + path + " file:");
+        boolean flag = false;
+        while (!flag) {
+            try {
+                int n = scanner.nextInt();
+                if (n > 50000)
+                    n = 50000;
+                else if (n < 0) {
+                    System.out.println("You provided a negative integer.");
+                    n = 0;
+                }
+                try {
+                    load(path, playersList, n);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Displayed top " + n + " players from the ranking.");
+                flag = true;
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid input type (must be an integer).");
+                scanner.nextLine();  // clear invalid input from scanner buffer
+            }
+        }
+        scanner.close();
+    }
+
+    // saving nicknames from the Players ArrayList into a ranking_nicknames file
+    public static void save(String path, ArrayList<Player> playersList) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(new FileOutputStream(path));
+        for (Player player : playersList)
+            pw.println(player.getNickname());
+        pw.close();
+    }
+
+    // reading nicknames from the ranking_nicknames file and displaying additional info of the Players in the ranking order
+    public static void load(String path, ArrayList<Player> playersList, int n) throws FileNotFoundException {
+        File file = new File(path);
+        Scanner scan = new Scanner(file);
+
+        for (int i =0; i < n; i++) {
+            String nickname = scan.next();
+            for (int j = 0; j < playersList.size(); j++) {
+                if (playersList.get(j).getNickname().equals(nickname)) {
+                    playersList.get(j).displayPlayerInfo();
+                }
+            }
+
+        }
+        scan.close();
     }
 }

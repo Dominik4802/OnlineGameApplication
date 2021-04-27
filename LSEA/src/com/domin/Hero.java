@@ -1,11 +1,12 @@
 package com.domin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
 // abstract Hero class to store universal data and methods of different heroes
-public abstract class Hero implements Cloneable {
+public abstract class Hero implements Cloneable, Serializable {
 
     protected String name;
     protected final int baseDamage;

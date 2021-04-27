@@ -28,12 +28,12 @@ public class ScoreCalculatorRunnable implements Runnable{
             statsList.get(j).setRank(statsList.get(j).calculateRank());
 
             // adding operations to increase the time of computations
-            int counter = 0;
-            int dummy = 0;
-            while(counter <100000) {
-                counter++;
-                dummy = (dummy + counter) * dummy * dummy / (dummy+1);
-            }
+//            int counter = 0;
+//            int dummy = 0;
+//            while(counter <100000) {
+//                counter++;
+//                dummy = (dummy + counter) * dummy * dummy / (dummy+1);
+//            }
 
         }
         countDownLatch.countDown();

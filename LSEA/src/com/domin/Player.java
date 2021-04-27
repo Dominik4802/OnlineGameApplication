@@ -1,7 +1,9 @@
 package com.domin;
 
 
-public class Player implements Cloneable {
+import java.io.Serializable;
+
+public class Player implements Cloneable, Serializable {
 
     private String nickname;
     private String joinDate;

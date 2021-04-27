@@ -1,8 +1,9 @@
 package com.domin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Statistics implements Cloneable {
+public class Statistics implements Cloneable, Serializable {
 
     // enum representing ranks based on the score from MASTER (the highest), through DIAMOND1 (highest od diamonds),
     // down to BRONZE3 (the lowest)
